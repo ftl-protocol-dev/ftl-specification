@@ -4,8 +4,8 @@
 
 Faster-Than-Light Standardization Effort              M. Casadevall, Ed.
 Internet-Draft                                                Indepedent
-Intended status: Informational                           January 4, 2021
-Expires: July 8, 2021
+Intended status: Informational                           January 5, 2021
+Expires: July 9, 2021
 
 
            Faster-Than-Light Streaming Protocl Specification
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 8, 2021.
+   This Internet-Draft will expire on July 9, 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Casadevall                Expires July 8, 2021                  [Page 1]
+Casadevall                Expires July 9, 2021                  [Page 1]
 
 Internet-Draft              Abbreviated Title               January 2021
 
@@ -70,12 +70,30 @@ Table of Contents
    1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   2
    2.  Design Tradeoffs/Limtations . . . . . . . . . . . . . . . . .   3
    3.  One-to-Many WebRTC  . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Charon Negotation Protocol  . . . . . . . . . . . . . . . . .   3
-   5.  RTP Stream Negotation . . . . . . . . . . . . . . . . . . . .   3
-   6.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   3
-   7.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   3
-   8.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   3
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Charon Negotation Protocol  . . . . . . . . . . . . . . . . .   4
+     4.1.  Message Format  . . . . . . . . . . . . . . . . . . . . .   4
+     4.2.  Response Codes  . . . . . . . . . . . . . . . . . . . . .   4
+     4.3.  Charon Verbs  . . . . . . . . . . . . . . . . . . . . . .   4
+       4.3.1.  HMAC  . . . . . . . . . . . . . . . . . . . . . . . .   4
+       4.3.2.  CONNECT . . . . . . . . . . . . . . . . . . . . . . .   4
+         4.3.2.1.  ProtocolVersion . . . . . . . . . . . . . . . . .   5
+         4.3.2.2.  VendorName  . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.3.  VendorVersion . . . . . . . . . . . . . . . . . .   5
+         4.3.2.4.  Video . . . . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.5.  VideoCodex  . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.6.  VideoHeight . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.7.  VideoWidth  . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.8.  VideoPayloadType  . . . . . . . . . . . . . . . .   5
+         4.3.2.9.  VideoIngestSSRC . . . . . . . . . . . . . . . . .   5
+         4.3.2.10. Audio . . . . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.11. AudioCodec  . . . . . . . . . . . . . . . . . . .   5
+         4.3.2.12. AudioPayloadType  . . . . . . . . . . . . . . . .   6
+         4.3.2.13. AudioIngestSSRC . . . . . . . . . . . . . . . . .   6
+       4.3.3.  DISCONNECT  . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   6
+   6.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   6
+   7.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   6
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction and Overview
 
@@ -86,6 +104,15 @@ Table of Contents
    behaviors, and defines a recommended ingest->endpoint streaming
    protocol, as well as notes in regards to implementation of the last
    mile WebRTC connections.
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 2]
+
+Internet-Draft              Abbreviated Title               January 2021
+
 
    FTL was specifically designed with the following objectives in mind
    which is must handle at all times.
@@ -103,16 +130,27 @@ Table of Contents
       VP8 and Opus, later ones used H.264, keeping with the original
       intent.
 
+   o  It is expected that to reduce latency, an FTL deployment has
+      multiple ingest and points of presenses for client connections.  A
+      stream connects to one ingest point, and then data is routed to
+      points of presence as necessary.
+
+   o  FTL end-points must support being behind anycast, as well as use
+      of STUN, and TURN if necessary
+
    o  Use of standards based technology for use in a web browser with no
       additional software or downloads for viewers
 
+   As originally designed, the following criticera were also kept in
+   mind, although not realized at least during the initial
+   implementation phases.
 
+   o  Use of IPv6
 
-
-Casadevall                Expires July 8, 2021                  [Page 2]
-
-Internet-Draft              Abbreviated Title               January 2021
-
+      *  IPv6 deployment and usage was considered highly desirable for
+         multiple reasons, primarily to simplify routing and mandated
+         multicast support; as implemented, there should be no known
+         IPv6 problems, but the protocol never tested either.
 
 2.  Design Tradeoffs/Limtations
 
@@ -122,23 +160,149 @@ Internet-Draft              Abbreviated Title               January 2021
 
    TBD
 
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 3]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
 4.  Charon Negotation Protocol
 
+   Charon handles negotation of RTP streams to Styx, and acts as an out
+   of band signaling method for FTL stream behavior.  The Charon
+   connection MUST be kept-alive at all times as a TCP/IP connection on
+   port 8084 (MC: should apply for IANA number).  If the TCP/IP
+   connection is reset, the broadcaster MUST assume that the ingest
+   point of presense has become unavailable, and begin clean-up and
+   teardown.  Likewise, the ingest daemon MUST begin teardown and
+   disregard any UDP traffic from the streamer upon Charon connection
+   loss.
+
+   The Charon protocol is built upon ASCII verbs with optional
+   arguments.  The lifecycle of this connection under normal cirmstances
+   is as follows.
+
+   o  Broadcaster connects to ingest on TCP/IP 8084
+
+   o  Broadcaster gets HMAC authentication
+
+   o  Broadcaster generates HMAC authentication based off streamer
+      connection ID and channel idea
+
+   o  Broadcaster sends CONNECT, combined with stream paramters.
+
+   o  Ingest sends FTL_OK or FTL_REJECT based on settings
+
+   o  If FLT_OK, Broadcaster sends RTP streams to the media port
+      indicated by the ingest
+
+4.1.  Message Format
+
+4.2.  Response Codes
+
+4.3.  Charon Verbs
+
+4.3.1.  HMAC
+
+   TDB
+
+4.3.2.  CONNECT
+
+   TDB
+
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 4]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+4.3.2.1.  ProtocolVersion
+
    TBD
 
-5.  RTP Stream Negotation
+4.3.2.2.  VendorName
 
    TBD
 
-6.  Styx Protocol Ingest Behavior
+4.3.2.3.  VendorVersion
 
    TBD
 
-7.  Babel Transcoding Behavior
+4.3.2.4.  Video
 
    TBD
 
-8.  WebRTC Last Mile Negotations
+4.3.2.5.  VideoCodex
+
+   TBD
+
+4.3.2.6.  VideoHeight
+
+   TBD
+
+4.3.2.7.  VideoWidth
+
+   TBD
+
+4.3.2.8.  VideoPayloadType
+
+   TBD
+
+4.3.2.9.  VideoIngestSSRC
+
+   TBD
+
+4.3.2.10.  Audio
+
+   TBD
+
+4.3.2.11.  AudioCodec
+
+   TBD
+
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 5]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+4.3.2.12.  AudioPayloadType
+
+   TBD
+
+4.3.2.13.  AudioIngestSSRC
+
+   TBD
+
+4.3.3.  DISCONNECT
+
+   TBD
+
+5.  Styx Protocol Ingest Behavior
+
+   TBD
+
+6.  Babel Transcoding Behavior
+
+   TBD
+
+7.  WebRTC Last Mile Negotations
 
    TBD
 
@@ -165,4 +329,8 @@ Author's Address
 
 
 
-Casadevall                Expires July 8, 2021                  [Page 3]
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 6]

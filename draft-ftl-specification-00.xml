@@ -106,18 +106,35 @@
       <t>FTL was specifically designed with the following objectives in mind which is must handle at all times.</t>
       <t>
         <list style="symbols">
-          <t>Real-world 500 millsecond delay for streamer to receiver broadcast under normal cirmstances at 30 FPS or more
-          <list style="symbols">
-            <t>At the time of it's implementation, 720p streaming was considered the best possible for most users, however,
+          <t>
+            Real-world 500 millsecond delay for streamer to receiver broadcast under normal cirmstances at 30 FPS or more
+            <list style="symbols">
+              <t>At the time of it's implementation, 720p streaming was considered the best possible for most users, however,
               advancements in technology have allowed for 1080p streaming.</t>
-          </list></t>
+            </list>
+          </t>
           <t>That FTL has be technology neutral; it should be able to use any video or audio codec as supported by WebRTC
              (or another last mile technology) independently. The original FTL implemntation used VP8 and Opus, later ones
              used H.264, keeping with the original intent.</t>
+          <t>It is expected that to reduce latency, an FTL deployment has multiple ingest and points of presenses for client connections.
+            A stream connects to one ingest point, and then data is routed to points of presence as necessary.</t>
+          <t>FTL end-points must support being behind anycast, as well as use of STUN, and TURN if necessary</t>
           <t>Use of standards based technology for use in a web browser with no additional software or downloads for viewers</t>
         </list>
       </t>
 
+      <t>As originally designed, the following criticera were also kept in mind, although not realized at least during the initial
+        implementation phases.</t>
+      <t>
+        <list style="symbols">
+          <t>Use of IPv6
+          <list style="symbols">
+            <t>IPv6 deployment and usage was considered highly desirable for multiple reasons, primarily to simplify
+              routing and mandated multicast support; as implemented, there should be no known IPv6 problems, but
+              the protocol never tested either.</t>
+          </list></t>
+        </list>
+      </t>
     </section>
 
     <section title="Design Tradeoffs/Limtations">
@@ -128,12 +145,89 @@
       <t>TBD</t>
     </section>
 
-    <section title="Charon Negotation Protocol">
+    <section title="A Note on SSRCs">
       <t>TBD</t>
     </section>
 
-    <section title="RTP Stream Negotation">
-      <t>TBD</t>
+    <section title="Charon Negotiation Protocol">
+      <t>Charon handles negotiation of RTP streams to Styx, and acts as an out of band signaling
+        method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as
+        a TCP/IP connection on port 8084 (MC: should apply for IANA number). If the TCP/IP connection
+        is reset, the broadcaster MUST assume that the ingest point of presence has become unavailable,
+        and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard
+        any UDP traffic from the streamer upon Charon connection loss. 
+      </t>
+      <t>The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this
+        connection under normal circumstances is as follows.
+      </t>
+      <t>
+        <list style="symbols">
+          <t>Broadcaster connects to ingest on TCP/IP 8084</t>
+          <t>Broadcaster gets HMAC authentication</t>
+          <t>Broadcaster generates HMAC authentication based off streamer connection ID and channel idea</t>
+          <t>Broadcaster sends CONNECT, combined with stream paramters.</t>
+          <t>Ingest sends FTL_OK or FTL_REJECT based on settings</t>
+          <t>If FLT_OK, Broadcaster sends RTP streams to the media port indicated by the ingest</t>
+          <t>Broadcaster starts RTP streams per Ingests response</t>
+          <t>Every five seconds, a PING response is sent, ingest replies with 201</t>
+          <t>Broadcaster sends DISCONNECT for orderly shutdown</t>
+        </list> 
+      </t>
+    <section title="Message Format"></section>
+    <section title="Response Codes"></section>
+    <section title="Charon Verbs">
+      <section title="HMAC">
+        <t>TDB</t>
+      </section>
+      <section title="CONNECT">
+        <t>TDB</t>
+        <section title="ProtocolVersion">
+          <t>TBD</t>
+        </section>
+        <section title="VendorName">
+          <t>TBD</t>
+        </section>
+        <section title="VendorVersion">
+          <t>TBD</t>
+        </section>
+        <section title="Video">
+          <t>TBD</t>
+        </section>
+        <section title="VideoCodex">
+          <t>TBD</t>
+        </section>
+        <section title="VideoHeight">
+          <t>TBD</t>
+        </section>
+        <section title="VideoWidth">
+          <t>TBD</t>
+        </section>
+        <section title="VideoPayloadType">
+          <t>TBD</t>
+        </section>
+        <section title="VideoIngestSSRC">
+          <t>TBD</t>
+        </section>
+        <section title="Audio">
+          <t>TBD</t>
+        </section>
+        <section title="AudioCodec">
+          <t>TBD</t>
+        </section>
+        <section title="AudioPayloadType">
+          <t>TBD</t>
+        </section>
+        <section title="AudioIngestSSRC">
+          <t>TBD</t>
+        </section>
+      </section>
+      <section title="DISCONNECT">
+        <t>TBD</t>
+      </section>
+      <section title="PING">
+        <t>TBD</t>
+      </section>
+  </section>
     </section>
 
     <section title="Styx Protocol Ingest Behavior">

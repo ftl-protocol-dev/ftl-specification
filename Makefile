@@ -1,18 +1,21 @@
 .PHONY: mkdir all
 
-all: mkdir build/draft-ftl-specification-00.html build/draft-ftl-specification-00.txt build/draft-ftl-specification-00.pdf
+all: mkdir docs/index.html docs/draft-ftl-specification-00.html docs/draft-ftl-specification-00.txt docs/draft-ftl-specification-00.pdf
 
 mkdir:
-	-mkdir build
+	@-mkdir docs 2> /dev/null
 
-build/draft-ftl-specification-00.html: draft-ftl-specification-00.xml
-	xml2rfc --html draft-ftl-specification-00.xml -p build
+docs/draft-ftl-specification-00.html: draft-ftl-specification-00.xml
+	xml2rfc --html draft-ftl-specification-00.xml -p docs
 
-build/draft-ftl-specification-00.pdf: draft-ftl-specification-00.xml
-	xml2rfc --pdf draft-ftl-specification-00.xml -p build
+docs/draft-ftl-specification-00.pdf: draft-ftl-specification-00.xml
+	xml2rfc --pdf draft-ftl-specification-00.xml -p docs
 
-build/draft-ftl-specification-00.txt: draft-ftl-specification-00.xml
-	xml2rfc draft-ftl-specification-00.xml -p build
+docs/draft-ftl-specification-00.txt: draft-ftl-specification-00.xml
+	xml2rfc -P draft-ftl-specification-00.xml -p docs
+
+docs/index.html:
+	ln -s draft-ftl-specification-00.html docs/index.html
 
 clean:
-	rm -r build
+	rm -r docs
