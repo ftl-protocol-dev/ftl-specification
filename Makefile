@@ -1,7 +1,18 @@
-all: draft.html draft.txt
+.PHONY: mkdir all
 
-draft.html: draft.xml
-	xml2html draft.xml > draft.html
+all: mkdir build/draft-ftl-specification-00.html build/draft-ftl-specification-00.txt build/draft-ftl-specification-00.pdf
 
-draft.txt: draft.xml
-	xml2rfc draft.xml > draft.txt
+mkdir:
+	-mkdir build
+
+build/draft-ftl-specification-00.html: draft-ftl-specification-00.xml
+	xml2rfc --html draft-ftl-specification-00.xml -p build
+
+build/draft-ftl-specification-00.pdf: draft-ftl-specification-00.xml
+	xml2rfc --pdf draft-ftl-specification-00.xml -p build
+
+build/draft-ftl-specification-00.txt: draft-ftl-specification-00.xml
+	xml2rfc draft-ftl-specification-00.xml -p build
+
+clean:
+	rm -r build

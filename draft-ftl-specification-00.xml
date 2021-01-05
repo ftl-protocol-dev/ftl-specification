@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml2rfc.tools.ietf.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+  <!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+  <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+  <!ENTITY RFC2629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
+  <!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
+  <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml2rfc.tools.ietf.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes" ?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4" ?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes" ?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="info" docName="draft-ftl-specification-00" submissionType="IAB" ipr="trust200902">
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+         full title is longer than 39 characters -->
+
+    <title abbrev="Abbreviated Title">Faster-Than-Light Streaming Protocl Specification</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Michael Casadevall" initials="M.C." role="editor" surname="Casadevall">
+      <organization>Indepedent</organization>
+      <address>
+        <postal>
+          <street />
+          <!-- Reorder these if your country does things differently -->
+
+          <city>Jersey City</city>
+          <region />
+          <code />
+          <country>United States</country>
+        </postal>
+        <email>michael@casadevall.pro</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+    <date year="2021" />
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
+         in the current day for you. If only the current year is specified, xml2rfc will fill 
+	 in the current day and month for you. If the year is not the current one, it is 
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>General</area>
+    <workgroup>Faster-Than-Light Standardization Effort</workgroup>
+    <keyword>template</keyword>
+
+    <abstract>
+      <t>With the demise of Microsoft's Mixer, the future of the Faster-Than-Light (FTL) streaming protocol has been left in doubt.
+        As the Internet's first practical subsecond streaming protocol, several successors to Mixer have decided to re-implement
+          FTL from the original SDK and notes. While Mixer's original FTL specification had a de-facto specification in the form of
+          ftl-sdk, the source code was in-complete, and several aspects of the FTL were left undocumented.
+      </t>
+      <t>In an effort to keep FTL viable and cross-service compatible, this specification denotes a canonical implementation of FTL,
+        handshake protocols, WebRTC notes, and all relevant information as relating to FTL with the hope that FTL may still be continued
+        as a vechile for low latency video streaming over the Internet.
+      </t>
+    </abstract>
+  </front>
+  <middle>
+    <section title="Introduction and Overview">
+      <t>This specification covers several components of the FTL protocol stream, and is primarily derieved from the implementation used
+        at Mixer and the freely available source code in ftl-sdk. This document details the handshaking protocol known as Charon, the
+      SRTP ingest behaviors, and defines a recommended ingest->endpoint streaming protocol, as well as notes in regards to implementation
+    of the last mile WebRTC connections.</t>
+
+      <t>FTL was specifically designed with the following objectives in mind which is must handle at all times.</t>
+      <t>
+        <list style="symbols">
+          <t>Real-world 500 millsecond delay for streamer to receiver broadcast under normal cirmstances at 30 FPS or more
+          <list style="symbols">
+            <t>At the time of it's implementation, 720p streaming was considered the best possible for most users, however,
+              advancements in technology have allowed for 1080p streaming.</t>
+          </list></t>
+          <t>That FTL has be technology neutral; it should be able to use any video or audio codec as supported by WebRTC
+             (or another last mile technology) independently. The original FTL implemntation used VP8 and Opus, later ones
+             used H.264, keeping with the original intent.</t>
+          <t>Use of standards based technology for use in a web browser with no additional software or downloads for viewers</t>
+        </list>
+      </t>
+
+    </section>
+
+    <section title="Design Tradeoffs/Limtations">
+      <t>TBD</t>
+    </section>
+
+    <section title="One-to-Many WebRTC">
+      <t>TBD</t>
+    </section>
+
+    <section title="Charon Negotation Protocol">
+      <t>TBD</t>
+    </section>
+
+    <section title="RTP Stream Negotation">
+      <t>TBD</t>
+    </section>
+
+    <section title="Styx Protocol Ingest Behavior">
+      <t>TBD</t>
+    </section>
+
+    <section title="Babel Transcoding Behavior">
+      <t>TBD</t>
+    </section>
+    <section title="WebRTC Last Mile Negotations">
+      <t>TBD</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+
+    <!-- Change Log
+
+v00 2021-01-04  MC   Initial version
+    -->
+  </back>
+</rfc>
