@@ -69,31 +69,34 @@ Table of Contents
 
    1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   2
    2.  Design Tradeoffs/Limtations . . . . . . . . . . . . . . . . .   3
-   3.  One-to-Many WebRTC  . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Charon Negotation Protocol  . . . . . . . . . . . . . . . . .   4
-     4.1.  Message Format  . . . . . . . . . . . . . . . . . . . . .   4
-     4.2.  Response Codes  . . . . . . . . . . . . . . . . . . . . .   4
-     4.3.  Charon Verbs  . . . . . . . . . . . . . . . . . . . . . .   4
-       4.3.1.  HMAC  . . . . . . . . . . . . . . . . . . . . . . . .   4
-       4.3.2.  CONNECT . . . . . . . . . . . . . . . . . . . . . . .   4
-         4.3.2.1.  ProtocolVersion . . . . . . . . . . . . . . . . .   5
-         4.3.2.2.  VendorName  . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.3.  VendorVersion . . . . . . . . . . . . . . . . . .   5
-         4.3.2.4.  Video . . . . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.5.  VideoCodex  . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.6.  VideoHeight . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.7.  VideoWidth  . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.8.  VideoPayloadType  . . . . . . . . . . . . . . . .   5
-         4.3.2.9.  VideoIngestSSRC . . . . . . . . . . . . . . . . .   5
-         4.3.2.10. Audio . . . . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.11. AudioCodec  . . . . . . . . . . . . . . . . . . .   5
-         4.3.2.12. AudioPayloadType  . . . . . . . . . . . . . . . .   6
-         4.3.2.13. AudioIngestSSRC . . . . . . . . . . . . . . . . .   6
-       4.3.3.  DISCONNECT  . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   6
-   6.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   6
-   7.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+   3.  One-to-Many WebRTC  . . . . . . . . . . . . . . . . . . . . .   4
+   4.  A Note on SSRCs . . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Charon Negotiation Protocol . . . . . . . . . . . . . . . . .   4
+     5.1.  Message Format  . . . . . . . . . . . . . . . . . . . . .   5
+       5.1.1.  On Linebreaks . . . . . . . . . . . . . . . . . . . .   5
+     5.2.  Response Codes  . . . . . . . . . . . . . . . . . . . . .   6
+     5.3.  Charon Verbs  . . . . . . . . . . . . . . . . . . . . . .   6
+       5.3.1.  HMAC  . . . . . . . . . . . . . . . . . . . . . . . .   6
+       5.3.2.  CONNECT . . . . . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.1.  ProtocolVersion . . . . . . . . . . . . . . . . .   6
+         5.3.2.2.  VendorName  . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.3.  VendorVersion . . . . . . . . . . . . . . . . . .   6
+         5.3.2.4.  Video . . . . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.5.  VideoCodex  . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.6.  VideoHeight . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.7.  VideoWidth  . . . . . . . . . . . . . . . . . . .   6
+         5.3.2.8.  VideoPayloadType  . . . . . . . . . . . . . . . .   6
+         5.3.2.9.  VideoIngestSSRC . . . . . . . . . . . . . . . . .   7
+         5.3.2.10. Audio . . . . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.11. AudioCodec  . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.12. AudioPayloadType  . . . . . . . . . . . . . . . .   7
+         5.3.2.13. AudioIngestSSRC . . . . . . . . . . . . . . . . .   7
+       5.3.3.  DISCONNECT  . . . . . . . . . . . . . . . . . . . . .   7
+       5.3.4.  PING  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   7
+   7.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   7
+   8.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction and Overview
 
@@ -102,9 +105,6 @@ Table of Contents
    Mixer and the freely available source code in ftl-sdk.  This document
    details the handshaking protocol known as Charon, the SRTP ingest
    behaviors, and defines a recommended ingest->endpoint streaming
-   protocol, as well as notes in regards to implementation of the last
-   mile WebRTC connections.
-
 
 
 
@@ -113,6 +113,9 @@ Casadevall                Expires July 9, 2021                  [Page 2]
 
 Internet-Draft              Abbreviated Title               January 2021
 
+
+   protocol, as well as notes in regards to implementation of the last
+   mile WebRTC connections.
 
    FTL was specifically designed with the following objectives in mind
    which is must handle at all times.
@@ -156,9 +159,6 @@ Internet-Draft              Abbreviated Title               January 2021
 
    TBD
 
-3.  One-to-Many WebRTC
-
-   TBD
 
 
 
@@ -170,21 +170,29 @@ Casadevall                Expires July 9, 2021                  [Page 3]
 Internet-Draft              Abbreviated Title               January 2021
 
 
-4.  Charon Negotation Protocol
+3.  One-to-Many WebRTC
 
-   Charon handles negotation of RTP streams to Styx, and acts as an out
+   TBD
+
+4.  A Note on SSRCs
+
+   TBD
+
+5.  Charon Negotiation Protocol
+
+   Charon handles negotiation of RTP streams to Styx, and acts as an out
    of band signaling method for FTL stream behavior.  The Charon
    connection MUST be kept-alive at all times as a TCP/IP connection on
    port 8084 (MC: should apply for IANA number).  If the TCP/IP
    connection is reset, the broadcaster MUST assume that the ingest
-   point of presense has become unavailable, and begin clean-up and
+   point of presence has become unavailable, and begin clean-up and
    teardown.  Likewise, the ingest daemon MUST begin teardown and
    disregard any UDP traffic from the streamer upon Charon connection
    loss.
 
    The Charon protocol is built upon ASCII verbs with optional
-   arguments.  The lifecycle of this connection under normal cirmstances
-   is as follows.
+   arguments.  The lifecycle of this connection under normal
+   circumstances is as follows.
 
    o  Broadcaster connects to ingest on TCP/IP 8084
 
@@ -200,20 +208,12 @@ Internet-Draft              Abbreviated Title               January 2021
    o  If FLT_OK, Broadcaster sends RTP streams to the media port
       indicated by the ingest
 
-4.1.  Message Format
+   o  Broadcaster starts RTP streams per Ingests response
 
-4.2.  Response Codes
+   o  Every five seconds, a PING response is sent, ingest replies with
+      201
 
-4.3.  Charon Verbs
-
-4.3.1.  HMAC
-
-   TDB
-
-4.3.2.  CONNECT
-
-   TDB
-
+   o  Broadcaster sends DISCONNECT for orderly shutdown
 
 
 
@@ -226,54 +226,54 @@ Casadevall                Expires July 9, 2021                  [Page 4]
 Internet-Draft              Abbreviated Title               January 2021
 
 
-4.3.2.1.  ProtocolVersion
+5.1.  Message Format
 
-   TBD
+   TBH
 
-4.3.2.2.  VendorName
+5.1.1.  On Linebreaks
 
-   TBD
+   The reference implementation of FTL uses the message signature
+   '\r\n\r\n' as an end of line marker.  This is an intentional
+   implementation detail due to an unintentional similarity between
+   FTL's CONNECT message, and the HTTP CONNECT proxy command, and
+   Microsoft discovered that some commercial firewalls would intercept
+   Charon's messages.  The original justification was left as this
+   comment in ftl_helpers.c
 
-4.3.2.3.  VendorVersion
+/*
+  Please note that throughout the code, we send "\r\n\r\n", where a normal
+  newline ("\n") would suffice. This is done due to some firewalls /
+  anti-malware systems not passing our packets through when we don't
+  send those double-windows-newlines. They seem to incorrectly detect
+  our protocol as HTTP.
+*/
 
-   TBD
+   A problem however arises that earlier implementations of FTL used
+   "\n" as a newline indicator.  While it is unlikely that any of these
+   legacy FTL clients are still in use, clients and ingests must use the
+   following behaviors
 
-4.3.2.4.  Video
+   Charon servers MUST disregard any empty newline, and treat "\r\n" and
+   "\n" as identical for the purposes of message parsing.  In effect,
+   all the following are the same.
 
-   TBD
+   CONNECT 1234_hash\n
+   Option1: 1234\n
+   Option2: 1234\n
+   .\n
 
-4.3.2.5.  VideoCodex
+   CONNECT 1234_hash\r\n
+   Option1: 1234\r\n
+   Option2: 1234\r\n
+   .\r\n
 
-   TBD
+   CONNECT 1234_hash\r\n
+   Option1: 1234\r\n\r\n
+   Option2: 1234\r\n\r\n
+   .\r\n\
 
-4.3.2.6.  VideoHeight
-
-   TBD
-
-4.3.2.7.  VideoWidth
-
-   TBD
-
-4.3.2.8.  VideoPayloadType
-
-   TBD
-
-4.3.2.9.  VideoIngestSSRC
-
-   TBD
-
-4.3.2.10.  Audio
-
-   TBD
-
-4.3.2.11.  AudioCodec
-
-   TBD
-
-
-
-
-
+   Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting
+   commands over clear text, but MAY use '\n', or '\r\n'
 
 
 
@@ -282,27 +282,99 @@ Casadevall                Expires July 9, 2021                  [Page 5]
 Internet-Draft              Abbreviated Title               January 2021
 
 
-4.3.2.12.  AudioPayloadType
+5.2.  Response Codes
+
+5.3.  Charon Verbs
+
+5.3.1.  HMAC
+
+   TDB
+
+5.3.2.  CONNECT
+
+   TDB
+
+5.3.2.1.  ProtocolVersion
 
    TBD
 
-4.3.2.13.  AudioIngestSSRC
+5.3.2.2.  VendorName
 
    TBD
 
-4.3.3.  DISCONNECT
+5.3.2.3.  VendorVersion
 
    TBD
 
-5.  Styx Protocol Ingest Behavior
+5.3.2.4.  Video
 
    TBD
 
-6.  Babel Transcoding Behavior
+5.3.2.5.  VideoCodex
 
    TBD
 
-7.  WebRTC Last Mile Negotations
+5.3.2.6.  VideoHeight
+
+   TBD
+
+5.3.2.7.  VideoWidth
+
+   TBD
+
+5.3.2.8.  VideoPayloadType
+
+   TBD
+
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 6]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+5.3.2.9.  VideoIngestSSRC
+
+   TBD
+
+5.3.2.10.  Audio
+
+   TBD
+
+5.3.2.11.  AudioCodec
+
+   TBD
+
+5.3.2.12.  AudioPayloadType
+
+   TBD
+
+5.3.2.13.  AudioIngestSSRC
+
+   TBD
+
+5.3.3.  DISCONNECT
+
+   TBD
+
+5.3.4.  PING
+
+   TBD
+
+6.  Styx Protocol Ingest Behavior
+
+   TBD
+
+7.  Babel Transcoding Behavior
+
+   TBD
+
+8.  WebRTC Last Mile Negotations
 
    TBD
 
@@ -317,20 +389,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Casadevall                Expires July 9, 2021                  [Page 6]
+Casadevall                Expires July 9, 2021                  [Page 7]

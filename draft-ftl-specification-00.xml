@@ -173,7 +173,51 @@
           <t>Broadcaster sends DISCONNECT for orderly shutdown</t>
         </list> 
       </t>
-    <section title="Message Format"></section>
+    <section title="Message Format">
+      <t>TBH </t>
+      <section title="On Linebreaks">
+        <t>The reference implementation of FTL uses the message signature '\r\n\r\n' as an end of line marker.
+          This is an intentional implementation detail due to an unintentional similarity between FTL's CONNECT message,
+          and the HTTP CONNECT proxy command, and Microsoft discovered that some commercial firewalls would intercept
+          Charon's messages. The original justification was left as this comment in ftl_helpers.c</t>
+        <figure>
+          <artwork><![CDATA[
+/*
+  Please note that throughout the code, we send "\r\n\r\n", where a normal
+  newline ("\n") would suffice. This is done due to some firewalls / 
+  anti-malware systems not passing our packets through when we don't
+  send those double-windows-newlines. They seem to incorrectly detect
+  our protocol as HTTP.
+*/
+            ]]></artwork>
+        </figure>
+      <t>A problem however arises that earlier implementations of FTL used "\n" as a newline indicator.
+        While it is unlikely that any of these legacy FTL clients are still in use, clients and ingests
+        must use the following behaviors</t>
+
+      <t>Charon servers MUST disregard any empty newline, and treat "\r\n" and "\n" as identical for the purposes
+        of message parsing. In effect, all the following are the same.</t>
+  <figure>
+    <artwork><![CDATA[
+CONNECT 1234_hash\n
+Option1: 1234\n
+Option2: 1234\n
+.\n
+
+CONNECT 1234_hash\r\n
+Option1: 1234\r\n
+Option2: 1234\r\n
+.\r\n
+
+CONNECT 1234_hash\r\n
+Option1: 1234\r\n\r\n
+Option2: 1234\r\n\r\n
+.\r\n\
+]]></artwork>
+  </figure>
+  <t>Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting commands over clear text, but MAY use '\n', or '\r\n'</t>
+    </section> <!-- newlines -->
+    </section>
     <section title="Response Codes"></section>
     <section title="Charon Verbs">
       <section title="HMAC">

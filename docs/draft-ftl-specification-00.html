@@ -377,29 +377,32 @@
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction and Overview">
 <link href="#rfc.section.2" rel="Chapter" title="2 Design Tradeoffs/Limtations">
 <link href="#rfc.section.3" rel="Chapter" title="3 One-to-Many WebRTC">
-<link href="#rfc.section.4" rel="Chapter" title="4 Charon Negotation Protocol">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Message Format">
-<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Response Codes">
-<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Charon Verbs">
-<link href="#rfc.section.4.3.1" rel="Chapter" title="4.3.1 HMAC">
-<link href="#rfc.section.4.3.2" rel="Chapter" title="4.3.2 CONNECT">
-<link href="#rfc.section.4.3.2.1" rel="Chapter" title="4.3.2.1 ProtocolVersion">
-<link href="#rfc.section.4.3.2.2" rel="Chapter" title="4.3.2.2 VendorName">
-<link href="#rfc.section.4.3.2.3" rel="Chapter" title="4.3.2.3 VendorVersion">
-<link href="#rfc.section.4.3.2.4" rel="Chapter" title="4.3.2.4 Video">
-<link href="#rfc.section.4.3.2.5" rel="Chapter" title="4.3.2.5 VideoCodex">
-<link href="#rfc.section.4.3.2.6" rel="Chapter" title="4.3.2.6 VideoHeight">
-<link href="#rfc.section.4.3.2.7" rel="Chapter" title="4.3.2.7 VideoWidth">
-<link href="#rfc.section.4.3.2.8" rel="Chapter" title="4.3.2.8 VideoPayloadType">
-<link href="#rfc.section.4.3.2.9" rel="Chapter" title="4.3.2.9 VideoIngestSSRC">
-<link href="#rfc.section.4.3.2.10" rel="Chapter" title="4.3.2.10 Audio">
-<link href="#rfc.section.4.3.2.11" rel="Chapter" title="4.3.2.11 AudioCodec">
-<link href="#rfc.section.4.3.2.12" rel="Chapter" title="4.3.2.12 AudioPayloadType">
-<link href="#rfc.section.4.3.2.13" rel="Chapter" title="4.3.2.13 AudioIngestSSRC">
-<link href="#rfc.section.4.3.3" rel="Chapter" title="4.3.3 DISCONNECT">
-<link href="#rfc.section.5" rel="Chapter" title="5 Styx Protocol Ingest Behavior">
-<link href="#rfc.section.6" rel="Chapter" title="6 Babel Transcoding Behavior">
-<link href="#rfc.section.7" rel="Chapter" title="7 WebRTC Last Mile Negotations">
+<link href="#rfc.section.4" rel="Chapter" title="4 A Note on SSRCs">
+<link href="#rfc.section.5" rel="Chapter" title="5 Charon Negotiation Protocol">
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Message Format">
+<link href="#rfc.section.5.1.1" rel="Chapter" title="5.1.1 On Linebreaks">
+<link href="#rfc.section.5.2" rel="Chapter" title="5.2 Response Codes">
+<link href="#rfc.section.5.3" rel="Chapter" title="5.3 Charon Verbs">
+<link href="#rfc.section.5.3.1" rel="Chapter" title="5.3.1 HMAC">
+<link href="#rfc.section.5.3.2" rel="Chapter" title="5.3.2 CONNECT">
+<link href="#rfc.section.5.3.2.1" rel="Chapter" title="5.3.2.1 ProtocolVersion">
+<link href="#rfc.section.5.3.2.2" rel="Chapter" title="5.3.2.2 VendorName">
+<link href="#rfc.section.5.3.2.3" rel="Chapter" title="5.3.2.3 VendorVersion">
+<link href="#rfc.section.5.3.2.4" rel="Chapter" title="5.3.2.4 Video">
+<link href="#rfc.section.5.3.2.5" rel="Chapter" title="5.3.2.5 VideoCodex">
+<link href="#rfc.section.5.3.2.6" rel="Chapter" title="5.3.2.6 VideoHeight">
+<link href="#rfc.section.5.3.2.7" rel="Chapter" title="5.3.2.7 VideoWidth">
+<link href="#rfc.section.5.3.2.8" rel="Chapter" title="5.3.2.8 VideoPayloadType">
+<link href="#rfc.section.5.3.2.9" rel="Chapter" title="5.3.2.9 VideoIngestSSRC">
+<link href="#rfc.section.5.3.2.10" rel="Chapter" title="5.3.2.10 Audio">
+<link href="#rfc.section.5.3.2.11" rel="Chapter" title="5.3.2.11 AudioCodec">
+<link href="#rfc.section.5.3.2.12" rel="Chapter" title="5.3.2.12 AudioPayloadType">
+<link href="#rfc.section.5.3.2.13" rel="Chapter" title="5.3.2.13 AudioIngestSSRC">
+<link href="#rfc.section.5.3.3" rel="Chapter" title="5.3.3 DISCONNECT">
+<link href="#rfc.section.5.3.4" rel="Chapter" title="5.3.4 PING">
+<link href="#rfc.section.6" rel="Chapter" title="6 Styx Protocol Ingest Behavior">
+<link href="#rfc.section.7" rel="Chapter" title="7 Babel Transcoding Behavior">
+<link href="#rfc.section.8" rel="Chapter" title="8 WebRTC Last Mile Negotations">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -466,51 +469,57 @@
 </li>
 <li>3.   <a href="#rfc.section.3">One-to-Many WebRTC</a>
 </li>
-<li>4.   <a href="#rfc.section.4">Charon Negotation Protocol</a>
+<li>4.   <a href="#rfc.section.4">A Note on SSRCs</a>
 </li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">Message Format</a>
+<li>5.   <a href="#rfc.section.5">Charon Negotiation Protocol</a>
 </li>
-<li>4.2.   <a href="#rfc.section.4.2">Response Codes</a>
+<ul><li>5.1.   <a href="#rfc.section.5.1">Message Format</a>
 </li>
-<li>4.3.   <a href="#rfc.section.4.3">Charon Verbs</a>
+<ul><li>5.1.1.   <a href="#rfc.section.5.1.1">On Linebreaks</a>
 </li>
-<ul><li>4.3.1.   <a href="#rfc.section.4.3.1">HMAC</a>
+</ul><li>5.2.   <a href="#rfc.section.5.2">Response Codes</a>
 </li>
-<li>4.3.2.   <a href="#rfc.section.4.3.2">CONNECT</a>
+<li>5.3.   <a href="#rfc.section.5.3">Charon Verbs</a>
 </li>
-<ul><li>4.3.2.1.   <a href="#rfc.section.4.3.2.1">ProtocolVersion</a>
+<ul><li>5.3.1.   <a href="#rfc.section.5.3.1">HMAC</a>
 </li>
-<li>4.3.2.2.   <a href="#rfc.section.4.3.2.2">VendorName</a>
+<li>5.3.2.   <a href="#rfc.section.5.3.2">CONNECT</a>
 </li>
-<li>4.3.2.3.   <a href="#rfc.section.4.3.2.3">VendorVersion</a>
+<ul><li>5.3.2.1.   <a href="#rfc.section.5.3.2.1">ProtocolVersion</a>
 </li>
-<li>4.3.2.4.   <a href="#rfc.section.4.3.2.4">Video</a>
+<li>5.3.2.2.   <a href="#rfc.section.5.3.2.2">VendorName</a>
 </li>
-<li>4.3.2.5.   <a href="#rfc.section.4.3.2.5">VideoCodex</a>
+<li>5.3.2.3.   <a href="#rfc.section.5.3.2.3">VendorVersion</a>
 </li>
-<li>4.3.2.6.   <a href="#rfc.section.4.3.2.6">VideoHeight</a>
+<li>5.3.2.4.   <a href="#rfc.section.5.3.2.4">Video</a>
 </li>
-<li>4.3.2.7.   <a href="#rfc.section.4.3.2.7">VideoWidth</a>
+<li>5.3.2.5.   <a href="#rfc.section.5.3.2.5">VideoCodex</a>
 </li>
-<li>4.3.2.8.   <a href="#rfc.section.4.3.2.8">VideoPayloadType</a>
+<li>5.3.2.6.   <a href="#rfc.section.5.3.2.6">VideoHeight</a>
 </li>
-<li>4.3.2.9.   <a href="#rfc.section.4.3.2.9">VideoIngestSSRC</a>
+<li>5.3.2.7.   <a href="#rfc.section.5.3.2.7">VideoWidth</a>
 </li>
-<li>4.3.2.10.   <a href="#rfc.section.4.3.2.10">Audio</a>
+<li>5.3.2.8.   <a href="#rfc.section.5.3.2.8">VideoPayloadType</a>
 </li>
-<li>4.3.2.11.   <a href="#rfc.section.4.3.2.11">AudioCodec</a>
+<li>5.3.2.9.   <a href="#rfc.section.5.3.2.9">VideoIngestSSRC</a>
 </li>
-<li>4.3.2.12.   <a href="#rfc.section.4.3.2.12">AudioPayloadType</a>
+<li>5.3.2.10.   <a href="#rfc.section.5.3.2.10">Audio</a>
 </li>
-<li>4.3.2.13.   <a href="#rfc.section.4.3.2.13">AudioIngestSSRC</a>
+<li>5.3.2.11.   <a href="#rfc.section.5.3.2.11">AudioCodec</a>
 </li>
-</ul><li>4.3.3.   <a href="#rfc.section.4.3.3">DISCONNECT</a>
+<li>5.3.2.12.   <a href="#rfc.section.5.3.2.12">AudioPayloadType</a>
 </li>
-</ul></ul><li>5.   <a href="#rfc.section.5">Styx Protocol Ingest Behavior</a>
+<li>5.3.2.13.   <a href="#rfc.section.5.3.2.13">AudioIngestSSRC</a>
 </li>
-<li>6.   <a href="#rfc.section.6">Babel Transcoding Behavior</a>
+</ul><li>5.3.3.   <a href="#rfc.section.5.3.3">DISCONNECT</a>
 </li>
-<li>7.   <a href="#rfc.section.7">WebRTC Last Mile Negotations</a>
+<li>5.3.4.   <a href="#rfc.section.5.3.4">PING</a>
+</li>
+</ul></ul><li>6.   <a href="#rfc.section.6">Styx Protocol Ingest Behavior</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Babel Transcoding Behavior</a>
+</li>
+<li>8.   <a href="#rfc.section.8">WebRTC Last Mile Negotations</a>
 </li>
 <li><a href="#rfc.authors">Author's Address</a>
 </li>
@@ -549,9 +558,12 @@
 <a href="#rfc.section.3">3.</a> One-to-Many WebRTC</h1>
 <p id="rfc.section.3.p.1">TBD</p>
 <h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> Charon Negotation Protocol</h1>
-<p id="rfc.section.4.p.1">Charon handles negotation of RTP streams to Styx, and acts as an out of band signaling method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as a TCP/IP connection on port 8084 (MC: should apply for IANA number). If the TCP/IP connection is reset, the broadcaster MUST assume that the ingest point of presense has become unavailable, and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard any UDP traffic from the streamer upon Charon connection loss.  </p>
-<p id="rfc.section.4.p.2">The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this connection under normal cirmstances is as follows.  </p>
+<a href="#rfc.section.4">4.</a> A Note on SSRCs</h1>
+<p id="rfc.section.4.p.1">TBD</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> Charon Negotiation Protocol</h1>
+<p id="rfc.section.5.p.1">Charon handles negotiation of RTP streams to Styx, and acts as an out of band signaling method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as a TCP/IP connection on port 8084 (MC: should apply for IANA number). If the TCP/IP connection is reset, the broadcaster MUST assume that the ingest point of presence has become unavailable, and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard any UDP traffic from the streamer upon Charon connection loss.  </p>
+<p id="rfc.section.5.p.2">The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this connection under normal circumstances is as follows.  </p>
 <p></p>
 
 <ul>
@@ -561,72 +573,110 @@
 <li>Broadcaster sends CONNECT, combined with stream paramters.</li>
 <li>Ingest sends FTL_OK or FTL_REJECT based on settings</li>
 <li>If FLT_OK, Broadcaster sends RTP streams to the media port indicated by the ingest</li>
+<li>Broadcaster starts RTP streams per Ingests response</li>
+<li>Every five seconds, a PING response is sent, ingest replies with 201</li>
+<li>Broadcaster sends DISCONNECT for orderly shutdown</li>
 </ul>
 
 <p> </p>
-<h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> Message Format</h1>
-<h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> Response Codes</h1>
-<h1 id="rfc.section.4.3">
-<a href="#rfc.section.4.3">4.3.</a> Charon Verbs</h1>
-<h1 id="rfc.section.4.3.1">
-<a href="#rfc.section.4.3.1">4.3.1.</a> HMAC</h1>
-<p id="rfc.section.4.3.1.p.1">TDB</p>
-<h1 id="rfc.section.4.3.2">
-<a href="#rfc.section.4.3.2">4.3.2.</a> CONNECT</h1>
-<p id="rfc.section.4.3.2.p.1">TDB</p>
-<h1 id="rfc.section.4.3.2.1">
-<a href="#rfc.section.4.3.2.1">4.3.2.1.</a> ProtocolVersion</h1>
-<p id="rfc.section.4.3.2.1.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.2">
-<a href="#rfc.section.4.3.2.2">4.3.2.2.</a> VendorName</h1>
-<p id="rfc.section.4.3.2.2.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.3">
-<a href="#rfc.section.4.3.2.3">4.3.2.3.</a> VendorVersion</h1>
-<p id="rfc.section.4.3.2.3.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.4">
-<a href="#rfc.section.4.3.2.4">4.3.2.4.</a> Video</h1>
-<p id="rfc.section.4.3.2.4.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.5">
-<a href="#rfc.section.4.3.2.5">4.3.2.5.</a> VideoCodex</h1>
-<p id="rfc.section.4.3.2.5.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.6">
-<a href="#rfc.section.4.3.2.6">4.3.2.6.</a> VideoHeight</h1>
-<p id="rfc.section.4.3.2.6.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.7">
-<a href="#rfc.section.4.3.2.7">4.3.2.7.</a> VideoWidth</h1>
-<p id="rfc.section.4.3.2.7.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.8">
-<a href="#rfc.section.4.3.2.8">4.3.2.8.</a> VideoPayloadType</h1>
-<p id="rfc.section.4.3.2.8.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.9">
-<a href="#rfc.section.4.3.2.9">4.3.2.9.</a> VideoIngestSSRC</h1>
-<p id="rfc.section.4.3.2.9.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.10">
-<a href="#rfc.section.4.3.2.10">4.3.2.10.</a> Audio</h1>
-<p id="rfc.section.4.3.2.10.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.11">
-<a href="#rfc.section.4.3.2.11">4.3.2.11.</a> AudioCodec</h1>
-<p id="rfc.section.4.3.2.11.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.12">
-<a href="#rfc.section.4.3.2.12">4.3.2.12.</a> AudioPayloadType</h1>
-<p id="rfc.section.4.3.2.12.p.1">TBD</p>
-<h1 id="rfc.section.4.3.2.13">
-<a href="#rfc.section.4.3.2.13">4.3.2.13.</a> AudioIngestSSRC</h1>
-<p id="rfc.section.4.3.2.13.p.1">TBD</p>
-<h1 id="rfc.section.4.3.3">
-<a href="#rfc.section.4.3.3">4.3.3.</a> DISCONNECT</h1>
-<p id="rfc.section.4.3.3.p.1">TBD</p>
-<h1 id="rfc.section.5">
-<a href="#rfc.section.5">5.</a> Styx Protocol Ingest Behavior</h1>
-<p id="rfc.section.5.p.1">TBD</p>
+<h1 id="rfc.section.5.1">
+<a href="#rfc.section.5.1">5.1.</a> Message Format</h1>
+<p id="rfc.section.5.1.p.1">TBH </p>
+<h1 id="rfc.section.5.1.1">
+<a href="#rfc.section.5.1.1">5.1.1.</a> On Linebreaks</h1>
+<p id="rfc.section.5.1.1.p.1">The reference implementation of FTL uses the message signature '\r\n\r\n' as an end of line marker.  This is an intentional implementation detail due to an unintentional similarity between FTL's CONNECT message, and the HTTP CONNECT proxy command, and Microsoft discovered that some commercial firewalls would intercept Charon's messages. The original justification was left as this comment in ftl_helpers.c</p>
+<pre>
+/*
+  Please note that throughout the code, we send "\r\n\r\n", where a normal
+  newline ("\n") would suffice. This is done due to some firewalls / 
+  anti-malware systems not passing our packets through when we don't
+  send those double-windows-newlines. They seem to incorrectly detect
+  our protocol as HTTP.
+*/
+            </pre>
+<p id="rfc.section.5.1.1.p.2">A problem however arises that earlier implementations of FTL used "\n" as a newline indicator.  While it is unlikely that any of these legacy FTL clients are still in use, clients and ingests must use the following behaviors</p>
+<p id="rfc.section.5.1.1.p.3">Charon servers MUST disregard any empty newline, and treat "\r\n" and "\n" as identical for the purposes of message parsing. In effect, all the following are the same.</p>
+<pre>
+CONNECT 1234_hash\n
+Option1: 1234\n
+Option2: 1234\n
+.\n
+
+CONNECT 1234_hash\r\n
+Option1: 1234\r\n
+Option2: 1234\r\n
+.\r\n
+
+CONNECT 1234_hash\r\n
+Option1: 1234\r\n\r\n
+Option2: 1234\r\n\r\n
+.\r\n\
+</pre>
+<p id="rfc.section.5.1.1.p.4">Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting commands over clear text, but MAY use '\n', or '\r\n'</p>
+<h1 id="rfc.section.5.2">
+<a href="#rfc.section.5.2">5.2.</a> Response Codes</h1>
+<h1 id="rfc.section.5.3">
+<a href="#rfc.section.5.3">5.3.</a> Charon Verbs</h1>
+<h1 id="rfc.section.5.3.1">
+<a href="#rfc.section.5.3.1">5.3.1.</a> HMAC</h1>
+<p id="rfc.section.5.3.1.p.1">TDB</p>
+<h1 id="rfc.section.5.3.2">
+<a href="#rfc.section.5.3.2">5.3.2.</a> CONNECT</h1>
+<p id="rfc.section.5.3.2.p.1">TDB</p>
+<h1 id="rfc.section.5.3.2.1">
+<a href="#rfc.section.5.3.2.1">5.3.2.1.</a> ProtocolVersion</h1>
+<p id="rfc.section.5.3.2.1.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.2">
+<a href="#rfc.section.5.3.2.2">5.3.2.2.</a> VendorName</h1>
+<p id="rfc.section.5.3.2.2.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.3">
+<a href="#rfc.section.5.3.2.3">5.3.2.3.</a> VendorVersion</h1>
+<p id="rfc.section.5.3.2.3.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.4">
+<a href="#rfc.section.5.3.2.4">5.3.2.4.</a> Video</h1>
+<p id="rfc.section.5.3.2.4.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.5">
+<a href="#rfc.section.5.3.2.5">5.3.2.5.</a> VideoCodex</h1>
+<p id="rfc.section.5.3.2.5.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.6">
+<a href="#rfc.section.5.3.2.6">5.3.2.6.</a> VideoHeight</h1>
+<p id="rfc.section.5.3.2.6.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.7">
+<a href="#rfc.section.5.3.2.7">5.3.2.7.</a> VideoWidth</h1>
+<p id="rfc.section.5.3.2.7.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.8">
+<a href="#rfc.section.5.3.2.8">5.3.2.8.</a> VideoPayloadType</h1>
+<p id="rfc.section.5.3.2.8.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.9">
+<a href="#rfc.section.5.3.2.9">5.3.2.9.</a> VideoIngestSSRC</h1>
+<p id="rfc.section.5.3.2.9.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.10">
+<a href="#rfc.section.5.3.2.10">5.3.2.10.</a> Audio</h1>
+<p id="rfc.section.5.3.2.10.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.11">
+<a href="#rfc.section.5.3.2.11">5.3.2.11.</a> AudioCodec</h1>
+<p id="rfc.section.5.3.2.11.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.12">
+<a href="#rfc.section.5.3.2.12">5.3.2.12.</a> AudioPayloadType</h1>
+<p id="rfc.section.5.3.2.12.p.1">TBD</p>
+<h1 id="rfc.section.5.3.2.13">
+<a href="#rfc.section.5.3.2.13">5.3.2.13.</a> AudioIngestSSRC</h1>
+<p id="rfc.section.5.3.2.13.p.1">TBD</p>
+<h1 id="rfc.section.5.3.3">
+<a href="#rfc.section.5.3.3">5.3.3.</a> DISCONNECT</h1>
+<p id="rfc.section.5.3.3.p.1">TBD</p>
+<h1 id="rfc.section.5.3.4">
+<a href="#rfc.section.5.3.4">5.3.4.</a> PING</h1>
+<p id="rfc.section.5.3.4.p.1">TBD</p>
 <h1 id="rfc.section.6">
-<a href="#rfc.section.6">6.</a> Babel Transcoding Behavior</h1>
+<a href="#rfc.section.6">6.</a> Styx Protocol Ingest Behavior</h1>
 <p id="rfc.section.6.p.1">TBD</p>
 <h1 id="rfc.section.7">
-<a href="#rfc.section.7">7.</a> WebRTC Last Mile Negotations</h1>
+<a href="#rfc.section.7">7.</a> Babel Transcoding Behavior</h1>
 <p id="rfc.section.7.p.1">TBD</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> WebRTC Last Mile Negotations</h1>
+<p id="rfc.section.8.p.1">TBD</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
