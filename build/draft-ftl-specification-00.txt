@@ -1,0 +1,168 @@
+
+
+
+
+Faster-Than-Light Standardization Effort              M. Casadevall, Ed.
+Internet-Draft                                                Indepedent
+Intended status: Informational                           January 4, 2021
+Expires: July 8, 2021
+
+
+           Faster-Than-Light Streaming Protocl Specification
+                       draft-ftl-specification-00
+
+Abstract
+
+   With the demise of Microsoft's Mixer, the future of the Faster-Than-
+   Light (FTL) streaming protocol has been left in doubt.  As the
+   Internet's first practical subsecond streaming protocol, several
+   successors to Mixer have decided to re-implement FTL from the
+   original SDK and notes.  While Mixer's original FTL specification had
+   a de-facto specification in the form of ftl-sdk, the source code was
+   in-complete, and several aspects of the FTL were left undocumented.
+
+   In an effort to keep FTL viable and cross-service compatible, this
+   specification denotes a canonical implementation of FTL, handshake
+   protocols, WebRTC notes, and all relevant information as relating to
+   FTL with the hope that FTL may still be continued as a vechile for
+   low latency video streaming over the Internet.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on July 8, 2021.
+
+Copyright Notice
+
+   Copyright (c) 2021 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+
+
+
+
+Casadevall                Expires July 8, 2021                  [Page 1]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.
+
+Table of Contents
+
+   1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   2
+   2.  Design Tradeoffs/Limtations . . . . . . . . . . . . . . . . .   3
+   3.  One-to-Many WebRTC  . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Charon Negotation Protocol  . . . . . . . . . . . . . . . . .   3
+   5.  RTP Stream Negotation . . . . . . . . . . . . . . . . . . . .   3
+   6.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   3
+   7.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   3
+   8.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   3
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   3
+
+1.  Introduction and Overview
+
+   This specification covers several components of the FTL protocol
+   stream, and is primarily derieved from the implementation used at
+   Mixer and the freely available source code in ftl-sdk.  This document
+   details the handshaking protocol known as Charon, the SRTP ingest
+   behaviors, and defines a recommended ingest->endpoint streaming
+   protocol, as well as notes in regards to implementation of the last
+   mile WebRTC connections.
+
+   FTL was specifically designed with the following objectives in mind
+   which is must handle at all times.
+
+   o  Real-world 500 millsecond delay for streamer to receiver broadcast
+      under normal cirmstances at 30 FPS or more
+
+      *  At the time of it's implementation, 720p streaming was
+         considered the best possible for most users, however,
+         advancements in technology have allowed for 1080p streaming.
+
+   o  That FTL has be technology neutral; it should be able to use any
+      video or audio codec as supported by WebRTC (or another last mile
+      technology) independently.  The original FTL implemntation used
+      VP8 and Opus, later ones used H.264, keeping with the original
+      intent.
+
+   o  Use of standards based technology for use in a web browser with no
+      additional software or downloads for viewers
+
+
+
+
+Casadevall                Expires July 8, 2021                  [Page 2]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+2.  Design Tradeoffs/Limtations
+
+   TBD
+
+3.  One-to-Many WebRTC
+
+   TBD
+
+4.  Charon Negotation Protocol
+
+   TBD
+
+5.  RTP Stream Negotation
+
+   TBD
+
+6.  Styx Protocol Ingest Behavior
+
+   TBD
+
+7.  Babel Transcoding Behavior
+
+   TBD
+
+8.  WebRTC Last Mile Negotations
+
+   TBD
+
+Author's Address
+
+   Michael Casadevall (editor)
+   Indepedent
+   Jersey City
+   United States
+
+   Email: michael@casadevall.pro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Casadevall                Expires July 8, 2021                  [Page 3]
