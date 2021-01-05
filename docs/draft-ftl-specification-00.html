@@ -375,7 +375,7 @@
 
   <link href="#rfc.toc" rel="Contents">
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction and Overview">
-<link href="#rfc.section.2" rel="Chapter" title="2 Design Tradeoffs/Limtations">
+<link href="#rfc.section.2" rel="Chapter" title="2 Design Tradeoffs/Limitations">
 <link href="#rfc.section.3" rel="Chapter" title="3 One-to-Many WebRTC">
 <link href="#rfc.section.4" rel="Chapter" title="4 A Note on SSRCs">
 <link href="#rfc.section.5" rel="Chapter" title="5 Charon Negotiation Protocol">
@@ -465,7 +465,7 @@
 
   	<li>1.   <a href="#rfc.section.1">Introduction and Overview</a>
 </li>
-<li>2.   <a href="#rfc.section.2">Design Tradeoffs/Limtations</a>
+<li>2.   <a href="#rfc.section.2">Design Tradeoffs/Limitations</a>
 </li>
 <li>3.   <a href="#rfc.section.3">One-to-Many WebRTC</a>
 </li>
@@ -552,7 +552,7 @@
 
 <p> </p>
 <h1 id="rfc.section.2">
-<a href="#rfc.section.2">2.</a> Design Tradeoffs/Limtations</h1>
+<a href="#rfc.section.2">2.</a> Design Tradeoffs/Limitations</h1>
 <p id="rfc.section.2.p.1">TBD</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> One-to-Many WebRTC</h1>
@@ -562,8 +562,10 @@
 <p id="rfc.section.4.p.1">TBD</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> Charon Negotiation Protocol</h1>
-<p id="rfc.section.5.p.1">Charon handles negotiation of RTP streams to Styx, and acts as an out of band signaling method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as a TCP/IP connection on port 8084 (MC: should apply for IANA number). If the TCP/IP connection is reset, the broadcaster MUST assume that the ingest point of presence has become unavailable, and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard any UDP traffic from the streamer upon Charon connection loss.  </p>
-<p id="rfc.section.5.p.2">The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this connection under normal circumstances is as follows.  </p>
+<p id="rfc.section.5.p.1">Charon handles negotiation of RTP streams to Styx, and acts as an out of band signaling method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as a TCP/IP connection on port 8084 (MC: should apply for IANA number). Upon establishment of a CONNECT, a client must send PING messages once every five seconds, or the server MAY time-out the connection.</p>
+<p id="rfc.section.5.p.2">It is RECOMMENDED that the server wait 10 seconds before assuming that a client has hung and hanging up. PING messages must be responded to with a 201 respond code. The server should send 5XX Timeout message before disconnecting. (Ed: fix this and actually put the client behavior)</p>
+<p id="rfc.section.5.p.3">If the TCP/IP connection is reset, the broadcaster MUST assume that the ingest point of presence has become unavailable, and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard any UDP traffic from the streamer upon Charon connection loss.  </p>
+<p id="rfc.section.5.p.4">The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this connection under normal circumstances is as follows.  </p>
 <p></p>
 
 <ul>
@@ -581,38 +583,52 @@
 <p> </p>
 <h1 id="rfc.section.5.1">
 <a href="#rfc.section.5.1">5.1.</a> Message Format</h1>
-<p id="rfc.section.5.1.p.1">TBH </p>
+<p id="rfc.section.5.1.p.1">Charon is directly modeled on SMTP commands and response codes. As such, commands take the form of a verb, followed by a three digital response. An example exchange looks as such:</p>
+<pre>
+            Client: PING\r\n\r\n
+            Server: 201 Ping OK!\r\n\r\n
+            </pre>
+<p id="rfc.section.5.1.p.2">For legacy reasons, linebreaks in Charon are encoded as '\r\n\r\n' (hex 0x0D0A0D0A), with an unusually complex implementation detail. See the section "On Linebreaks" for more details.</p>
+<p id="rfc.section.5.1.p.3">For commands that do not need additional meta-data, the server SHALL process them immediately upon receiving a linebreak, otherwise, a multiline format using RFC822 headers is defined, with the message ended with a single period. Unknown headers MUST be disregarded by the server. This message exchange looks as follows:</p>
+<pre>
+                Client: CONNECT 1234-myhashhere\r\n\r\n
+                     C: Video: true\r\n\r\n
+                     C: Audio: true\r\n\r\n
+                     C: .\r\n\r\n
+                Server: 200 Send UDP!\r\n\r\n
+                </pre>
+<p id="rfc.section.5.1.p.4">The Charon protocol does not allow for transmission of binary data without encoding. If necessary, it is RECOMMENDED that binary data base encoded in Base64.</p>
 <h1 id="rfc.section.5.1.1">
 <a href="#rfc.section.5.1.1">5.1.1.</a> On Linebreaks</h1>
 <p id="rfc.section.5.1.1.p.1">The reference implementation of FTL uses the message signature '\r\n\r\n' as an end of line marker.  This is an intentional implementation detail due to an unintentional similarity between FTL's CONNECT message, and the HTTP CONNECT proxy command, and Microsoft discovered that some commercial firewalls would intercept Charon's messages. The original justification was left as this comment in ftl_helpers.c</p>
 <pre>
 /*
-  Please note that throughout the code, we send "\r\n\r\n", where a normal
-  newline ("\n") would suffice. This is done due to some firewalls / 
-  anti-malware systems not passing our packets through when we don't
-  send those double-windows-newlines. They seem to incorrectly detect
-  our protocol as HTTP.
+  Please note that throughout the code, we send "\r\n\r\n", where a 
+  normal newline ("\n") would suffice. This is done due to some 
+  firewalls /  anti-malware systems not passing our packets 
+  through when we don't send those double-windows-newlines. They
+  seem to incorrectly detect our protocol as HTTP.
 */
             </pre>
 <p id="rfc.section.5.1.1.p.2">A problem however arises that earlier implementations of FTL used "\n" as a newline indicator.  While it is unlikely that any of these legacy FTL clients are still in use, clients and ingests must use the following behaviors</p>
 <p id="rfc.section.5.1.1.p.3">Charon servers MUST disregard any empty newline, and treat "\r\n" and "\n" as identical for the purposes of message parsing. In effect, all the following are the same.</p>
 <pre>
-CONNECT 1234_hash\n
+CONNECT 1234-hash\n
 Option1: 1234\n
 Option2: 1234\n
 .\n
 
-CONNECT 1234_hash\r\n
+CONNECT 1234-hash\r\n
 Option1: 1234\r\n
 Option2: 1234\r\n
 .\r\n
 
-CONNECT 1234_hash\r\n
+CONNECT 1234-hash\r\n
 Option1: 1234\r\n\r\n
 Option2: 1234\r\n\r\n
 .\r\n\
 </pre>
-<p id="rfc.section.5.1.1.p.4">Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting commands over clear text, but MAY use '\n', or '\r\n'</p>
+<p id="rfc.section.5.1.1.p.4">Charon clients are MUST to use '\r\n\r\n' when transmitting commands over clear text.</p>
 <h1 id="rfc.section.5.2">
 <a href="#rfc.section.5.2">5.2.</a> Response Codes</h1>
 <h1 id="rfc.section.5.3">

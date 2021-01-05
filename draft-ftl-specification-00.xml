@@ -137,7 +137,7 @@
       </t>
     </section>
 
-    <section title="Design Tradeoffs/Limtations">
+    <section title="Design Tradeoffs/Limitations">
       <t>TBD</t>
     </section>
 
@@ -152,10 +152,17 @@
     <section title="Charon Negotiation Protocol">
       <t>Charon handles negotiation of RTP streams to Styx, and acts as an out of band signaling
         method for FTL stream behavior. The Charon connection MUST be kept-alive at all times as
-        a TCP/IP connection on port 8084 (MC: should apply for IANA number). If the TCP/IP connection
-        is reset, the broadcaster MUST assume that the ingest point of presence has become unavailable,
-        and begin clean-up and teardown. Likewise, the ingest daemon MUST begin teardown and disregard
-        any UDP traffic from the streamer upon Charon connection loss. 
+        a TCP/IP connection on port 8084 (MC: should apply for IANA number). Upon establishment of
+        a CONNECT, a client MUST send PING messages once every five seconds, or the server MAY time-out
+        the connection.</t>
+        
+        <t>It is RECOMMENDED that the server wait 10 seconds before assuming that a client has hung and
+          hanging up. PING messages must be responded to with a 201 respond code. The server SHOULD send
+          5XX Timeout message before disconnecting. (Ed: fix this and actually put the client behavior)</t>
+
+        <t>If the TCP/IP connection is reset, the broadcaster MUST assume that the ingest point of presence
+          has become unavailable, and begin clean-up and teardown. Likewise, the ingest daemon MUST begin
+          teardown and disregard any UDP traffic from the streamer upon Charon connection loss. 
       </t>
       <t>The Charon protocol is built upon ASCII verbs with optional arguments. The lifecycle of this
         connection under normal circumstances is as follows.
@@ -174,20 +181,50 @@
         </list> 
       </t>
     <section title="Message Format">
-      <t>TBH </t>
-      <section title="On Linebreaks">
+      <t>Charon is directly modeled on SMTP commands and response codes. As such, commands take the form of a verb,
+        followed by a three digital response. An example exchange looks as such:</t>
+
+        <figure align="center">
+          <artwork><![CDATA[
+            Client: PING\r\n\r\n
+            Server: 201 Ping OK!\r\n\r\n
+            ]]></artwork>
+            </figure>
+
+        <t>For legacy reasons, linebreaks in Charon are encoded as '\r\n\r\n' (hex 0x0D0A0D0A), with an unusually complex
+          implementation detail. See the section "On Linebreaks" for more details.</t>
+
+        <t>For commands that do not need additional meta-data, the server SHALL process them immediately upon receiving a
+          linebreak, otherwise, a multiline format using RFC822 headers is defined, with the message ended with a single
+          period. Unknown headers MUST be disregarded by the server. This message exchange looks as follows:</t>
+          
+            <figure align="center">
+              <artwork><![CDATA[
+                Client: CONNECT 1234-myhashhere\r\n\r\n
+                     C: Video: true\r\n\r\n
+                     C: Audio: true\r\n\r\n
+                     C: .\r\n\r\n
+                Server: 200 Send UDP!\r\n\r\n
+                ]]></artwork>
+            </figure>
+    
+          <t>The Charon protocol does not allow for transmission of binary data without encoding. If necessary, it is RECOMMENDED
+            that binary data base encoded in Base64.</t>            
+
+        <section title="On Linebreaks">
         <t>The reference implementation of FTL uses the message signature '\r\n\r\n' as an end of line marker.
           This is an intentional implementation detail due to an unintentional similarity between FTL's CONNECT message,
           and the HTTP CONNECT proxy command, and Microsoft discovered that some commercial firewalls would intercept
           Charon's messages. The original justification was left as this comment in ftl_helpers.c</t>
-        <figure>
+ 
+        <figure align="center">
           <artwork><![CDATA[
 /*
-  Please note that throughout the code, we send "\r\n\r\n", where a normal
-  newline ("\n") would suffice. This is done due to some firewalls / 
-  anti-malware systems not passing our packets through when we don't
-  send those double-windows-newlines. They seem to incorrectly detect
-  our protocol as HTTP.
+  Please note that throughout the code, we send "\r\n\r\n", where a 
+  normal newline ("\n") would suffice. This is done due to some 
+  firewalls /  anti-malware systems not passing our packets 
+  through when we don't send those double-windows-newlines. They
+  seem to incorrectly detect our protocol as HTTP.
 */
             ]]></artwork>
         </figure>
@@ -197,25 +234,25 @@
 
       <t>Charon servers MUST disregard any empty newline, and treat "\r\n" and "\n" as identical for the purposes
         of message parsing. In effect, all the following are the same.</t>
-  <figure>
+  <figure align="center">
     <artwork><![CDATA[
-CONNECT 1234_hash\n
+CONNECT 1234-hash\n
 Option1: 1234\n
 Option2: 1234\n
 .\n
 
-CONNECT 1234_hash\r\n
+CONNECT 1234-hash\r\n
 Option1: 1234\r\n
 Option2: 1234\r\n
 .\r\n
 
-CONNECT 1234_hash\r\n
+CONNECT 1234-hash\r\n
 Option1: 1234\r\n\r\n
 Option2: 1234\r\n\r\n
 .\r\n\
 ]]></artwork>
   </figure>
-  <t>Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting commands over clear text, but MAY use '\n', or '\r\n'</t>
+  <t>Charon clients MUST to use '\r\n\r\n' when transmitting commands over clear text.</t>
     </section> <!-- newlines -->
     </section>
     <section title="Response Codes"></section>

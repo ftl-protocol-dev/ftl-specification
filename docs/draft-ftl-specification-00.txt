@@ -68,7 +68,7 @@ Internet-Draft              Abbreviated Title               January 2021
 Table of Contents
 
    1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   2
-   2.  Design Tradeoffs/Limtations . . . . . . . . . . . . . . . . .   3
+   2.  Design Tradeoffs/Limitations  . . . . . . . . . . . . . . . .   3
    3.  One-to-Many WebRTC  . . . . . . . . . . . . . . . . . . . . .   4
    4.  A Note on SSRCs . . . . . . . . . . . . . . . . . . . . . . .   4
    5.  Charon Negotiation Protocol . . . . . . . . . . . . . . . . .   4
@@ -78,25 +78,25 @@ Table of Contents
      5.3.  Charon Verbs  . . . . . . . . . . . . . . . . . . . . . .   6
        5.3.1.  HMAC  . . . . . . . . . . . . . . . . . . . . . . . .   6
        5.3.2.  CONNECT . . . . . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.1.  ProtocolVersion . . . . . . . . . . . . . . . . .   6
-         5.3.2.2.  VendorName  . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.3.  VendorVersion . . . . . . . . . . . . . . . . . .   6
-         5.3.2.4.  Video . . . . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.5.  VideoCodex  . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.6.  VideoHeight . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.7.  VideoWidth  . . . . . . . . . . . . . . . . . . .   6
-         5.3.2.8.  VideoPayloadType  . . . . . . . . . . . . . . . .   6
+         5.3.2.1.  ProtocolVersion . . . . . . . . . . . . . . . . .   7
+         5.3.2.2.  VendorName  . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.3.  VendorVersion . . . . . . . . . . . . . . . . . .   7
+         5.3.2.4.  Video . . . . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.5.  VideoCodex  . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.6.  VideoHeight . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.7.  VideoWidth  . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.8.  VideoPayloadType  . . . . . . . . . . . . . . . .   7
          5.3.2.9.  VideoIngestSSRC . . . . . . . . . . . . . . . . .   7
          5.3.2.10. Audio . . . . . . . . . . . . . . . . . . . . . .   7
          5.3.2.11. AudioCodec  . . . . . . . . . . . . . . . . . . .   7
-         5.3.2.12. AudioPayloadType  . . . . . . . . . . . . . . . .   7
-         5.3.2.13. AudioIngestSSRC . . . . . . . . . . . . . . . . .   7
-       5.3.3.  DISCONNECT  . . . . . . . . . . . . . . . . . . . . .   7
-       5.3.4.  PING  . . . . . . . . . . . . . . . . . . . . . . . .   7
-   6.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   7
-   7.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   7
-   8.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+         5.3.2.12. AudioPayloadType  . . . . . . . . . . . . . . . .   8
+         5.3.2.13. AudioIngestSSRC . . . . . . . . . . . . . . . . .   8
+       5.3.3.  DISCONNECT  . . . . . . . . . . . . . . . . . . . . .   8
+       5.3.4.  PING  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Styx Protocol Ingest Behavior . . . . . . . . . . . . . . . .   8
+   7.  Babel Transcoding Behavior  . . . . . . . . . . . . . . . . .   8
+   8.  WebRTC Last Mile Negotations  . . . . . . . . . . . . . . . .   8
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction and Overview
 
@@ -155,7 +155,7 @@ Internet-Draft              Abbreviated Title               January 2021
          multicast support; as implemented, there should be no known
          IPv6 problems, but the protocol never tested either.
 
-2.  Design Tradeoffs/Limtations
+2.  Design Tradeoffs/Limitations
 
    TBD
 
@@ -183,10 +183,19 @@ Internet-Draft              Abbreviated Title               January 2021
    Charon handles negotiation of RTP streams to Styx, and acts as an out
    of band signaling method for FTL stream behavior.  The Charon
    connection MUST be kept-alive at all times as a TCP/IP connection on
-   port 8084 (MC: should apply for IANA number).  If the TCP/IP
-   connection is reset, the broadcaster MUST assume that the ingest
-   point of presence has become unavailable, and begin clean-up and
-   teardown.  Likewise, the ingest daemon MUST begin teardown and
+   port 8084 (MC: should apply for IANA number).  Upon establishment of
+   a CONNECT, a client must send PING messages once every five seconds,
+   or the server MAY time-out the connection.
+
+   It is RECOMMENDED that the server wait 10 seconds before assuming
+   that a client has hung and hanging up.  PING messages must be
+   responded to with a 201 respond code.  The server should send 5XX
+   Timeout message before disconnecting.  (Ed: fix this and actually put
+   the client behavior)
+
+   If the TCP/IP connection is reset, the broadcaster MUST assume that
+   the ingest point of presence has become unavailable, and begin clean-
+   up and teardown.  Likewise, the ingest daemon MUST begin teardown and
    disregard any UDP traffic from the streamer upon Charon connection
    loss.
 
@@ -210,15 +219,6 @@ Internet-Draft              Abbreviated Title               January 2021
 
    o  Broadcaster starts RTP streams per Ingests response
 
-   o  Every five seconds, a PING response is sent, ingest replies with
-      201
-
-   o  Broadcaster sends DISCONNECT for orderly shutdown
-
-
-
-
-
 
 
 Casadevall                Expires July 9, 2021                  [Page 4]
@@ -226,9 +226,39 @@ Casadevall                Expires July 9, 2021                  [Page 4]
 Internet-Draft              Abbreviated Title               January 2021
 
 
+   o  Every five seconds, a PING response is sent, ingest replies with
+      201
+
+   o  Broadcaster sends DISCONNECT for orderly shutdown
+
 5.1.  Message Format
 
-   TBH
+   Charon is directly modeled on SMTP commands and response codes.  As
+   such, commands take the form of a verb, followed by a three digital
+   response.  An example exchange looks as such:
+
+               Client: PING\r\n\r\n
+               Server: 201 Ping OK!\r\n\r\n
+
+   For legacy reasons, linebreaks in Charon are encoded as '\r\n\r\n'
+   (hex 0x0D0A0D0A), with an unusually complex implementation detail.
+   See the section "On Linebreaks" for more details.
+
+   For commands that do not need additional meta-data, the server SHALL
+   process them immediately upon receiving a linebreak, otherwise, a
+   multiline format using RFC822 headers is defined, with the message
+   ended with a single period.  Unknown headers MUST be disregarded by
+   the server.  This message exchange looks as follows:
+
+                   Client: CONNECT 1234-myhashhere\r\n\r\n
+                        C: Video: true\r\n\r\n
+                        C: Audio: true\r\n\r\n
+                        C: .\r\n\r\n
+                   Server: 200 Send UDP!\r\n\r\n
+
+   The Charon protocol does not allow for transmission of binary data
+   without encoding.  If necessary, it is RECOMMENDED that binary data
+   base encoded in Base64.
 
 5.1.1.  On Linebreaks
 
@@ -240,13 +270,25 @@ Internet-Draft              Abbreviated Title               January 2021
    Charon's messages.  The original justification was left as this
    comment in ftl_helpers.c
 
-/*
-  Please note that throughout the code, we send "\r\n\r\n", where a normal
-  newline ("\n") would suffice. This is done due to some firewalls /
-  anti-malware systems not passing our packets through when we don't
-  send those double-windows-newlines. They seem to incorrectly detect
-  our protocol as HTTP.
-*/
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 5]
+
+Internet-Draft              Abbreviated Title               January 2021
+
+
+   /*
+     Please note that throughout the code, we send "\r\n\r\n", where a
+     normal newline ("\n") would suffice. This is done due to some
+     firewalls /  anti-malware systems not passing our packets
+     through when we don't send those double-windows-newlines. They
+     seem to incorrectly detect our protocol as HTTP.
+   */
 
    A problem however arises that earlier implementations of FTL used
    "\n" as a newline indicator.  While it is unlikely that any of these
@@ -257,30 +299,23 @@ Internet-Draft              Abbreviated Title               January 2021
    "\n" as identical for the purposes of message parsing.  In effect,
    all the following are the same.
 
-   CONNECT 1234_hash\n
+   CONNECT 1234-hash\n
    Option1: 1234\n
    Option2: 1234\n
    .\n
 
-   CONNECT 1234_hash\r\n
+   CONNECT 1234-hash\r\n
    Option1: 1234\r\n
    Option2: 1234\r\n
    .\r\n
 
-   CONNECT 1234_hash\r\n
+   CONNECT 1234-hash\r\n
    Option1: 1234\r\n\r\n
    Option2: 1234\r\n\r\n
    .\r\n\
 
-   Charon clients are RECOMMENDED to use '\r\n\r\n' when transmitting
-   commands over clear text, but MAY use '\n', or '\r\n'
-
-
-
-Casadevall                Expires July 9, 2021                  [Page 5]
-
-Internet-Draft              Abbreviated Title               January 2021
-
+   Charon clients are MUST to use '\r\n\r\n' when transmitting commands
+   over clear text.
 
 5.2.  Response Codes
 
@@ -293,6 +328,15 @@ Internet-Draft              Abbreviated Title               January 2021
 5.3.2.  CONNECT
 
    TDB
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 6]
+
+Internet-Draft              Abbreviated Title               January 2021
+
 
 5.3.2.1.  ProtocolVersion
 
@@ -326,18 +370,6 @@ Internet-Draft              Abbreviated Title               January 2021
 
    TBD
 
-
-
-
-
-
-
-
-Casadevall                Expires July 9, 2021                  [Page 6]
-
-Internet-Draft              Abbreviated Title               January 2021
-
-
 5.3.2.9.  VideoIngestSSRC
 
    TBD
@@ -349,6 +381,18 @@ Internet-Draft              Abbreviated Title               January 2021
 5.3.2.11.  AudioCodec
 
    TBD
+
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 7]
+
+Internet-Draft              Abbreviated Title               January 2021
+
 
 5.3.2.12.  AudioPayloadType
 
@@ -389,4 +433,16 @@ Author's Address
 
 
 
-Casadevall                Expires July 9, 2021                  [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+Casadevall                Expires July 9, 2021                  [Page 8]
