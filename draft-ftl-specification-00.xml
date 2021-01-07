@@ -258,10 +258,85 @@ Option2: 1234\r\n\r\n
     <section title="Response Codes"></section>
     <section title="Charon Verbs">
       <section title="HMAC">
-        <t>TDB</t>
+        <t>
+          A Charon client handshake opens with the HMAC command which is used for authentication, and requests a payload to sign as to show ownership of a channel.</t>
+        <t>
+          After receiving this command, The server will generate a random byte array from here on known as the Authentication Challenge.
+          The server will then respond with the FTL_OK response status followed by the hex encoded value of the Authentication Challenge, as shown in the following figure.</t>
+        <figure align="center">
+          <artwork><![CDATA[
+CLIENT: HMAC\r\n
+SERVER: 200 66746c20697320612070726f746f636f6c
+
+CLIENT: HMAC\r\n
+SERVER: 200 66746C20697320612070726F746F636F6C
+]]></artwork>
+        </figure>
+        <t>
+          <list style="symbols">
+            <t>The Authentication Challenge SHOULD be derived from a Cryptographically Secure Pseudo-Random Number Generator (CSPRNG) and MUST be unique for every session.</t>
+            <t>A Charon client MUST be agnostic about the casing of the hexidecimal data, and for that reason no standard is provided, and the examples of the following figure are the same value.</t>
+        </list>
+        </t>
       </section>
       <section title="CONNECT">
-        <t>TDB</t>
+        <t>After a Charon client has received and succesfully decoded the Authentication Challenge from it's hexidecimal presentation, the Charon client will use their shared key to sign the Authentication Challenge by the use of HMAC-SHA512.</t>
+          <t>The Authentication Challenge will be used as message data and the shared key will be used as key.
+          The resulting payload of this hasing function will be hex encoded and will from here on be known as the Proof.</t>
+          
+        <t>The Charon client will then respond to the server with the CONNECT command, by providing their identifier and the Proof which is prefixed with a dollar sign ($).
+          A valid command based on the example response given for HMAC is shown in the following figure.
+          The secret key used for this example is charon
+        </t>
+        <figure align="center">
+          <artwork><![CDATA[
+CLIENT: CONNECT 8084 $05fbad0acfcfc278fe950af58bc6620d17274601d0
+CLIENT: 9d841e793c8b53058964fca79df3ac78bb288aabd22cb8628ee48a2c
+CLIENT: 1ee2e13ab1595dbfaae0eb4f483904\r\n
+SERVER: 200\n
+]]></artwork>
+        </figure>
+        <t>
+          When the Charon server is unable to validate the proof the Charon server MUST respond with the FTL_INVALID_STREAM_KEY response code, as shown in the following figure.
+        </t>
+        <figure align="center">
+          <artwork><![CDATA[
+CLIENT: CONNECT 8084 $badbadbadbadbadbadbadbadbadbadbadbadbadbad
+CLIENT: badbadbadbadbadbadbadbadbadbadbadbadbadbadbadbadbadbadba
+CLIENT: dbadbadbadbadbadbadbadbadbadba\r\n
+SERVER: 405\n
+]]></artwork>
+        </figure>
+        <t>
+          <list style="symbols">
+            <t>Just like the Authentication Challenge, a server MUST be agnostic about the casing of the hexidecimal data of the Proof.</t>
+        </list>
+        </t>
+      </section>
+      <section title="Stream Metadata">
+        <t>
+          Once the Charon client has authenticated with the server, the client will send the server the metadata about the stream the client wants to publish.</t>
+        <t>
+          The Metadata Fields will be sent in key value parts, split by a colon (:) and then followed by newlines, the client will terminte the metadata stream with a line containing only a singular dot (.)
+          A simple definition of this is shown in the following figure.
+        </t>
+
+        <figure align="center">
+          <artwork><![CDATA[
+stream-metadata = <metadata-field>* "." <NEWLINE>+
+
+metadata-field  = <metadata-key> ":" <WHITESPACE>? <metadata-value> <NEWLINE>+
+
+metadata-key    = <all non-control ASCII characters except ":", CR and LF>
+metadata-value  = <all non-control ASCII characters except CR and LF>
+]]></artwork>
+        </figure>
+
+        <t>
+          While the Charon client sends metadata fields the server MUST only respond once it receives the terminator.
+        </t>
+
+        <t>while the Charon metadata definition might resemble MIME Header Fields (RFC 822 3.2) it is not compliant and MUST NOT be treated as such.</t>
         <section title="ProtocolVersion">
           <t>TBD</t>
         </section>
